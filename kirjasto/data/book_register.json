@@ -1,0 +1,42 @@
+{
+    "Aarre": {
+        "author": "Teppo Nurminen",
+        "year": 1988,
+        "available": true
+    },
+    "Bashin perusteet": {
+        "author": "Jalmar Van Hjalmar",
+        "year": 2019,
+        "available": true
+    },
+    "Linuxin mytologia": {
+        "author": "Anssi Saarenheimo",
+        "year": 2022,
+        "available": true
+    },
+    "Pythonin mestarit": {
+        "author": "Henri Ilmarinen",
+        "year": 2015,
+        "available": true
+    },
+    "Kyberturvallisuuden ilmiöt": {
+        "author": "Heikki Kuula",
+        "year": 2021,
+        "available": true
+    },
+    "Python": {
+        "author": "Matti",
+        "year": 2025,
+        "available": true
+    },
+    "Linux": {
+        "author": "Jiri Kuusisto",
+        "year": 2024,
+        "available": true
+    },
+    "Kybernetes": {
+        "author": "Juho Koski",
+        "year": 2014,
+        "available": true
+    }
+}
