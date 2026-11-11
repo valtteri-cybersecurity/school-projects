@@ -35,12 +35,14 @@ def main():
             continue
         elif nav1 == 4:
             operator = "/"
-
             try:
                 result = divide(num1, num2)
             except ValueError as error:
                 print(f"Error: {error}")
                 continue
+
+            show_operation(num1, num2, operator, result)
+            continue
 
 if __name__=="__main__":
     main()

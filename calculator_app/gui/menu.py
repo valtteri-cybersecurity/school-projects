@@ -6,10 +6,10 @@ def mainmenu() -> None:
 
 def mainmenu_nav() -> int:
     while True:
-        choice = ask_operation()
-        if not choice.isdigit():
+        try:
+            choice = ask_operation()
+        except ValueError:
             only_numbers_allowed()
             continue
-        choice = int(choice)
         if 0 <= choice <= 4:
             return choice
