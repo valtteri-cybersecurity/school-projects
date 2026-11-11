@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="FastAPI-laskin">
+  <title>Calculator | FastAPI</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <section class="calculator" aria-labelledby="title">
+      <header class="heading">
+        <div class="eyebrow">FASTAPI CALCULATOR</div>
+        <h1 id="title">Laskin</h1>
+        <p>Valitse laskutoimitus ja anna kaksi lukua.</p>
+      </header>
+
+      <form id="calculator-form" novalidate>
+        <div class="fields">
+          <label for="number-a">Ensimmäinen luku</label>
+          <input id="number-a" name="a" type="number" step="any" inputmode="decimal" placeholder="Esim. 10,5" required>
+          <label for="number-b">Toinen luku</label>
+          <input id="number-b" name="b" type="number" step="any" inputmode="decimal" placeholder="Esim. 2,5" required>
+        </div>
+
+        <fieldset class="operations">
+          <legend>Laskutoimitus</legend>
+          <div class="operation-grid">
+            <label class="operation"><input type="radio" name="operation" value="add" checked><span>+<small>Yhteen</small></span></label>
+            <label class="operation"><input type="radio" name="operation" value="subtract"><span>−<small>Vähennys</small></span></label>
+            <label class="operation"><input type="radio" name="operation" value="multiply"><span>×<small>Kerto</small></span></label>
+            <label class="operation"><input type="radio" name="operation" value="divide"><span>÷<small>Jako</small></span></label>
+          </div>
+        </fieldset>
+
+        <div class="actions">
+          <button id="calculate-button" class="primary" type="submit">Laske tulos</button>
+          <button class="secondary" type="reset">Tyhjennä</button>
+        </div>
+      </form>
+
+      <section class="result-panel" aria-labelledby="result-heading">
+        <h2 id="result-heading">Tulos</h2>
+        <output id="result" aria-live="polite">—</output>
+        <p id="message" role="status" aria-live="polite">Anna luvut ja paina Laske tulos.</p>
+      </section>
+      <footer>Laskenta suoritetaan FastAPI-palvelimella.</footer>
+    </section>
+  </main>
+</body>
+</html>
