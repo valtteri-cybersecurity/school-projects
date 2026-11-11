@@ -1,3 +1,6 @@
+from pathlib import Path
+from fastapi.staticfiles import StaticFiles
+
 from gui.menu import mainmenu, mainmenu_nav
 from input.user_input import ask_numbers
 from input.messages import program_shutting_down

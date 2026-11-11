@@ -1,5 +1,3 @@
-from input.messages import cant_divide_with_zero
-
 def add(a: int, b: int) -> int:
     return a + b
 
