@@ -2,7 +2,7 @@
 
 // Samassa originissa käytetään suhteellista polkua. AWS-julkaisussa
 // vaihda tähän API Gatewayn HTTPS-osoite (esim. https://...execute-api...amazonaws.com).
-const API_BASE_URL = "";
+const API_BASE_URL = "https://tqlc3bk5s0.execute-api.eu-north-1.amazonaws.com";
 
 const form = document.querySelector("#calculator-form");
 const resultElement = document.querySelector("#result");
