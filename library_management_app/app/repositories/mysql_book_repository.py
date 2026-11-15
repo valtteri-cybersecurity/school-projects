@@ -1,4 +1,4 @@
-from app.database.connection import get_connection
+from database.connection import get_connection
 from app.models.book import Book
 
 
