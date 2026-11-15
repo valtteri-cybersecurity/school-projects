@@ -178,7 +178,7 @@ def test_missing_books_table_is_rejected(mysql_connections):
     with connection.cursor() as cursor:
         cursor.execute("DROP TABLE books")
 
-    with pytest.raises(RuntimeError, match="Missing books column"):
+    with pytest.raises(RuntimeError, match="Missing books table"):
         run_migrations(connection)
 
 
@@ -195,26 +195,30 @@ def test_modified_books_column_is_rejected(mysql_connections):
     with pytest.raises(RuntimeError, match="Unexpected column type"):
         run_migrations(connection)
 
-def test_missing_books_table_is_rejected(mysql_connections):
+
+@pytest.mark.parametrize(
+    "sql, message",
+    [
+        ("ALTER TABLE books DROP COLUMN author", "Missing books column"),
+        (
+            "ALTER TABLE books MODIFY book_id BIGINT UNSIGNED NOT NULL, "
+            "DROP PRIMARY KEY",
+            "Unexpected books primary key",
+        ),
+        (
+            "ALTER TABLE books DROP PRIMARY KEY, "
+            "ADD PRIMARY KEY (book_id, title)",
+            "Unexpected books primary key",
+        ),
+    ]
+)
+def test_modified_books_schema_is_rejected(mysql_connections, sql, message):
     connection, _ = mysql_connections
 
     run_migrations(connection)
 
     with connection.cursor() as cursor:
-        cursor.execute("DROP TABLE books")
+        cursor.execute(sql)
 
-    with pytest.raises(RuntimeError, match="Missing books column"):
-        run_migrations(connection)
-
-def test_modified_books_column_is_rejected(mysql_connections):
-    connection, _ = mysql_connections
-
-    run_migrations(connection)
-
-    with connection.cursor() as cursor:
-        cursor.execute(
-            "ALTER TABLE books MODIFY author INT NOT NULL"
-        )
-
-    with pytest.raises(RuntimeError, match="Unexpected column type"):
+    with pytest.raises(RuntimeError, match=message):
         run_migrations(connection)
