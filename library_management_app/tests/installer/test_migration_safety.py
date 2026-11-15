@@ -264,3 +264,45 @@ def test_multiple_sql_statements_are_rejected(tmp_path):
 
     with pytest.raises(ValueError, match="exactly one SQL statement"):
         migrations.read_migration_sql(file_path)
+
+
+@pytest.mark.parametrize("invalid_schema", [False, True])
+def test_run_validates_books_schema(
+    monkeypatch, migration_file, invalid_schema
+):
+    connection = EmptyConnection()
+    checked = []
+
+    monkeypatch.setattr(
+        migrations, "get_migration_files", lambda: [migration_file]
+    )
+    monkeypatch.setattr(
+        migrations, "migration_lock", lambda connection: nullcontext()
+    )
+    monkeypatch.setattr(
+        migrations, "create_migration_table", lambda connection: None
+    )
+    monkeypatch.setattr(
+        migrations, "validate_migration_history",
+        lambda connection, files: None
+    )
+    monkeypatch.setattr(
+        migrations, "apply_migration", lambda connection, file: False
+    )
+
+    def check_schema(current_connection):
+        checked.append(current_connection)
+        if invalid_schema:
+            raise RuntimeError("Invalid books schema")
+
+    monkeypatch.setattr(migrations, "validate_books_schema", check_schema)
+
+    if invalid_schema:
+        with pytest.raises(RuntimeError, match="Invalid books schema"):
+            migrations.run_migrations(connection)
+    else:
+        assert migrations.run_migrations(connection) == {
+            "applied": [], "skipped": ["001"]
+        }
+
+    assert checked == [connection]

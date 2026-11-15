@@ -478,6 +478,75 @@ def apply_migration(connection, migration_file: Path) -> bool:
     return True
 
 
+def validate_books_schema(connection) -> None:
+
+    expected_columns = {
+        "book_id": ("bigint", True, None),
+        "title": ("varchar", False, 100),
+        "author": ("varchar", False, 100),
+        "year": ("smallint", True, None),
+        "available": ("tinyint", False, None),
+        "created_at": ("datetime", False, None),
+        "updated_at": ("datetime", False, None),
+    }
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            """
+            SELECT COLUMN_NAME AS name,
+                   DATA_TYPE AS data_type,
+                   COLUMN_TYPE AS column_type,
+                   CHARACTER_MAXIMUM_LENGTH AS max_length
+            FROM information_schema.columns
+            WHERE table_schema = DATABASE()
+              AND table_name = 'books'
+            """
+        )
+        rows = cursor.fetchall()
+
+    if not rows:
+        raise RuntimeError("Missing books table!")
+
+    columns = {}
+
+    for row in rows:
+        columns[row["name"]] = row
+
+    for name, expected_type in expected_columns.items():
+        if name not in columns:
+            raise RuntimeError(f"Missing books column: {name}")
+
+        column = columns[name]
+        unsigned = "unsigned" in column["column_type"].split()
+        actual_type = (
+            column["data_type"], unsigned, column["max_length"]
+        )
+
+        if actual_type != expected_type:
+            raise RuntimeError(f"Unexpected column type for books.{name}")
+
+    with connection.cursor() as cursor:
+        cursor.execute(
+            """
+            SELECT COLUMN_NAME AS name
+            FROM information_schema.statistics
+            WHERE table_schema = DATABASE()
+              AND table_name = 'books'
+              AND index_name = 'PRIMARY'
+            ORDER BY seq_in_index
+            """
+        )
+        rows = cursor.fetchall()
+
+    primary_key = []
+
+    for row in rows:
+        primary_key.append(row["name"])
+
+    if primary_key != ["book_id"]:
+        raise RuntimeError("Unexpected books primary key: expected book_id")
+
+
 def run_migrations(connection) -> dict:
 
     migration_files = get_migration_files()
