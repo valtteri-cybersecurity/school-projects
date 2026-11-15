@@ -1,4 +1,4 @@
-from app.database.connection import get_connection
+from database.connection import get_connection
 from app.models.book import Book
 
 
@@ -11,7 +11,7 @@ class MySQLBookRepository:
             with connection.cursor() as cursor:
                 sql = """
                     INSERT INTO books
-                        (name, author, year, available)
+                        (title, author, year, available)
                     VALUES (%s, %s, %s, %s)
                 """
     
@@ -49,9 +49,9 @@ class MySQLBookRepository:
             with connection.cursor() as cursor:
                 cursor.execute(
                     """
-                    SELECT id, name, author, year, available
+                    SELECT book_id, title, author, year, available
                     FROM books
-                    ORDER BY name, id
+                    ORDER BY title, book_id
                     """
                 )
 
@@ -70,9 +70,9 @@ class MySQLBookRepository:
             with connection.cursor() as cursor:
                 cursor.execute(
                     """
-                    SELECT id, name, author, year, available
+                    SELECT book_id, title, author, year, available
                     FROM books
-                    WHERE id = %s
+                    WHERE book_id = %s
                     """,
                     (book_id,)
                 )
@@ -94,10 +94,10 @@ class MySQLBookRepository:
             with connection.cursor() as cursor:
                 cursor.execute(
                     """
-                    SELECT id, name, author, year, available
+                    SELECT book_id, title, author, year, available
                     FROM books
-                    WHERE name LIKE %s
-                    ORDER BY name, id
+                    WHERE title LIKE %s
+                    ORDER BY title, book_id
                     """,
                     ("%" + title + "%",)
                 )
@@ -121,10 +121,10 @@ class MySQLBookRepository:
             with connection.cursor() as cursor:
                 cursor.execute(
                     """
-                    SELECT id, name, author, year, available
+                    SELECT book_id, title, author, year, available
                     FROM books
                     WHERE author LIKE %s
-                    ORDER BY name, id
+                    ORDER BY title, book_id
                     """,
                     ("%" + author + "%",)
                 )
@@ -147,7 +147,7 @@ class MySQLBookRepository:
                     """
                     UPDATE books
                     SET available = %s
-                    WHERE id = %s
+                    WHERE book_id = %s
                     """,
                     (available, book_id)
                 )
@@ -167,8 +167,8 @@ class MySQLBookRepository:
 
     def _row_to_book(self, row):
         return Book(
-            row["id"],
-            row["name"],
+            row["book_id"],
+            row["title"],
             row["author"],
             row["year"],
             bool(row["available"])
