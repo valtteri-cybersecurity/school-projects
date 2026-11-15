@@ -1,4 +1,4 @@
-PyMySQL==1.2.3
+PyMySQL[rsa]==1.2.3
 python-dotenv==1.2.4
 fastapi
 uvicorn
