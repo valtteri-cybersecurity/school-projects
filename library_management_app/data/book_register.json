@@ -38,5 +38,10 @@
         "author": "Juho Koski",
         "year": 2014,
         "available": true
+    },
+    "Wireshark": {
+        "author": "Alvari Leppänen",
+        "year": 2018,
+        "available": true
     }
 }
