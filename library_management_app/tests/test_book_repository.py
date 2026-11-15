@@ -42,6 +42,7 @@ def test_duplicate_book_id():
     assert len(repository.books) == 1
     assert repository.books[1] is book1
 
+
 def test_search_by_author():
     repository = BookRepository()
 
@@ -53,3 +54,80 @@ def test_search_by_author():
     repository.add(book2)
     repository.add(book3)
 
+    result = repository.search_by_author("Matti")
+
+    assert len(result) == 2
+    assert book1 in result
+    assert book2 in result
+    assert book3 not in result
+
+
+def test_get_by_id_returns_book():
+    repository = BookRepository()
+    book1 = Book(1, "Python", "Matti", 2025, True)
+    book2 = Book(2, "Linux", "Liisa", 2024, False)
+
+    repository.add(book1)
+    repository.add(book2)
+
+    result = repository.get_by_id(2)
+
+    assert result is book2
+
+
+def test_get_by_id_returns_none_for_missing_book():
+    repository = BookRepository()
+    book = Book(1, "Python", "Matti", 2025, True)
+
+    repository.add(book)
+
+    result = repository.get_by_id(99)
+
+    assert result is None
+
+
+def test_get_all_returns_empty_list():
+    repository = BookRepository()
+
+    result = repository.get_all()
+
+    assert result == []
+
+
+def test_get_all_returns_added_books():
+    repository = BookRepository()
+    book1 = Book(1, "Python", "Matti", 2025, True)
+    book2 = Book(2, "Linux", "Liisa", 2024, False)
+
+    repository.add(book1)
+    repository.add(book2)
+
+    result = repository.get_all()
+
+    assert len(result) == 2
+    assert book1 in result
+    assert book2 in result
+
+
+def test_search_by_title_returns_partial_match():
+    repository = BookRepository()
+    book1 = Book(1, "Python", "Matti", 2025, True)
+    book2 = Book(2, "Linux", "Liisa", 2024, False)
+
+    repository.add(book1)
+    repository.add(book2)
+
+    result = repository.search_by_title("thon")
+
+    assert result == [book1]
+
+
+def test_search_by_title_returns_empty_list_for_unknown_title():
+    repository = BookRepository()
+    book = Book(1, "Python", "Matti", 2025, True)
+
+    repository.add(book)
+
+    result = repository.search_by_title("Java")
+
+    assert result == []
